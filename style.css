@@ -213,3 +213,96 @@ body {
         min-width: unset;
     }
 }
+
+/* --- Estilos para el Modal --- */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Permanece en su lugar */
+    z-index: 1; /* Se sitúa por encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Habilitar scroll si es necesario */
+    background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente negro */
+    display: flex; /* Usar flexbox para centrar el contenido */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centrar vertical y horizontalmente */
+    padding: 25px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del contenido */
+    max-width: 500px; /* Ancho máximo */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative;
+    text-align: left;
+    color: #333;
+}
+
+.modal-content h2 {
+    color: #8A2BE2; /* Mismo morado vibrante que los títulos */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+.modal-content p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.modal-content strong {
+    color: #555;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 15px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-button.approve {
+    background-color: #EE82EE; /* Violet - Morado pastel */
+    color: white;
+}
+
+.modal-button.approve:hover {
+    background-color: #BA55D3; /* MediumOrchid - Morado más oscuro */
+}
+
+.modal-button.close {
+    background-color: #cccccc;
+    color: #333;
+}
+
+.modal-button.close:hover {
+    background-color: #bbbbbb;
+}
