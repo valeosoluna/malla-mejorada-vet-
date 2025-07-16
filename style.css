@@ -45,62 +45,24 @@ body {
     color: #333;
 }
 
-.main-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+.main-content {
+    overflow-x: auto; /* Permite scroll horizontal si hay muchos semestres */
+    padding-bottom: 20px;
 }
 
-.area-container {
+.semesters-container {
+    display: flex; /* Para organizar los semestres en columnas */
+    gap: 15px; /* Espacio entre columnas de semestre */
+    padding: 10px;
     background-color: #fff;
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.area-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #0056b3;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-}
-
-/* Colores de área */
-.basic-area {
-    border-left: 5px solid #007bff; /* Azul para Básica */
-}
-.disciplinary-area {
-    border-left: 5px solid #28a745; /* Verde para Disciplinar */
-}
-.elective-area {
-    border-left: 5px solid #ffc107; /* Amarillo para Electiva */
-}
-
-.cycles-container {
-    display: flex;
-    gap: 20px;
-    justify-content: space-around;
-}
-
-.cycle {
-    flex: 1;
-    min-width: 45%;
-}
-
-.cycle h3 {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #555;
-}
-
-.semesters-grid, .semester-group-basic, .semester-group-electiva {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Ajuste de columnas */
-    gap: 15px;
+    min-width: fit-content; /* Para que no se encoja si hay muchos semestres */
 }
 
 .semester {
+    flex-shrink: 0; /* Evita que los semestres se encojan */
+    width: 180px; /* Ancho fijo para cada columna de semestre */
     background-color: #e9ecef;
     padding: 10px;
     border-radius: 5px;
@@ -110,28 +72,47 @@ body {
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }
 
+.semester h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
 .courses-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px; /* Espacio entre los recuadros de los ramos */
     margin-top: 10px;
 }
 
 .course-box {
     background-color: #28a745; /* Verde para no aprobado */
     color: white;
-    padding: 12px;
+    padding: 10px;
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: relative; /* Para el tachado */
+    position: relative;
+    border: 2px solid transparent; /* Borde para el color de área */
 }
 
 .course-box:hover:not(.approved):not(.blocked) {
     opacity: 0.8;
 }
+
+/* Colores de borde por área */
+.course-box.Básica {
+    border-color: #007bff; /* Azul para Básica */
+}
+.course-box.Disciplinar {
+    border-color: #28a745; /* Verde para Disciplinar */
+}
+.course-box.Electiva {
+    border-color: #ffc107; /* Amarillo para Electiva */
+}
+
 
 .course-box.approved {
     background-color: #ff8c00; /* Naranjo para aprobado */
@@ -141,7 +122,7 @@ body {
 
 .course-box.blocked {
     background-color: #ccc; /* Gris para bloqueado */
-    cursor: not-allowed;
+    cursor: not-allowed; /* Cambiado a not-allowed para indicar que NO se puede hacer clic */
     opacity: 0.6;
 }
 
@@ -174,6 +155,7 @@ body {
     cursor: default;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     text-decoration: none; /* Asegura que no estén tachados */
+    border-color: #17a2b8; /* Mismo color de fondo para el borde */
 }
 
 #refreshRecommendations {
@@ -193,19 +175,19 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .cycles-container {
-        flex-direction: column;
+    .semesters-container {
+        flex-wrap: wrap; /* Permite que los semestres se envuelvan en pantallas pequeñas */
+        justify-content: center;
     }
-    .cycle {
-        min-width: 100%;
-    }
-    .semesters-grid, .semester-group-basic, .semester-group-electiva {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    .semester {
+        width: 45%; /* Ajuste de ancho para 2 columnas en tablets */
+        min-width: 150px;
     }
 }
 
 @media (max-width: 480px) {
-    .semesters-grid, .semester-group-basic, .semester-group-electiva {
-        grid-template-columns: 1fr;
+    .semester {
+        width: 90%; /* Ajuste de ancho para 1 columna en móviles */
+        min-width: unset;
     }
 }
