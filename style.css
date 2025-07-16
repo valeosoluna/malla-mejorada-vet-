@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f4; /* Fondo claro para contraste */
+    background-color: #FFF0F5; /* LavenderBlush - un rosa muy claro y suave */
     color: #333;
 }
 
@@ -15,9 +15,9 @@ body {
 .progress-container {
     width: 80%;
     max-width: 800px;
-    background-color: #e0e0e0; /* Fondo de la barra de progreso */
+    background-color: #E0E0E0; /* Fondo de la barra de progreso */
     border-radius: 5px;
-    margin: 20px auto;
+    margin: 20px auto 10px auto; /* Ajuste margen inferior */
     height: 30px;
     position: relative;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
@@ -26,7 +26,7 @@ body {
 .progress-bar {
     height: 100%;
     width: 0%;
-    background-color: #A084E8; /* Morado claro para el progreso inicial */
+    background-color: #FFC0CB; /* Pink - Rosado pastel para el progreso inicial */
     border-radius: 5px;
     text-align: center;
     line-height: 30px;
@@ -44,6 +44,23 @@ body {
     font-weight: bold;
     color: #333;
 }
+
+/* Estilos para el promedio de ramos */
+.average-grade-container {
+    margin-top: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #555;
+    background-color: #F8F8FF; /* GhostWhite - fondo muy claro */
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block; /* Para que el fondo se ajuste al texto */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.average-grade-text {
+    color: #8A2BE2; /* BlueViolet - Morado vibrante para el texto */
+}
+
 
 .main-content {
     overflow-x: auto;
@@ -63,7 +80,7 @@ body {
 .semester {
     flex-shrink: 0;
     width: 180px;
-    background-color: #e9ecef; /* Fondo de la columna del semestre */
+    background-color: #F8F8FF; /* GhostWhite - Fondo de la columna del semestre */
     padding: 10px;
     border-radius: 5px;
     text-align: center;
@@ -86,7 +103,7 @@ body {
 }
 
 .course-box {
-    background-color: #A084E8; /* Morado lavanda para ramos no aprobados/disponibles */
+    background-color: #FFC0CB; /* Pink - Rosado pastel para ramos no aprobados/disponibles */
     color: white;
     padding: 10px;
     border-radius: 5px;
@@ -96,33 +113,39 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     position: relative;
     border: 2px solid transparent; /* Borde para el color de área */
+    display: flex; /* Para centrar contenido y el emoji */
+    align-items: center;
+    justify-content: center;
+    min-height: 40px; /* Asegura un mínimo de altura para el contenido */
+    line-height: 1.2; /* Ajusta interlineado para nombres largos */
 }
 
 .course-box:hover:not(.approved):not(.blocked) {
     opacity: 0.8;
 }
 
-/* Colores de borde por área (rosados/morados) */
+/* Colores de borde por área (pasteles variados) */
 .course-box.Básica {
-    border-color: #E2BBE9; /* Rosa claro para Básica */
+    border-color: #ADD8E6; /* LightBlue - Azul claro pastel */
 }
 .course-box.Disciplinar {
-    border-color: #CC7B82; /* Rosa más oscuro para Disciplinar */
+    border-color: #98FB98; /* PaleGreen - Verde pálido pastel */
 }
 .course-box.Electiva {
-    border-color: #AA7BCC; /* Morado violáceo para Electiva */
+    border-color: #FFDAB9; /* PeachPuff - Durazno pastel */
 }
 
 .course-box.approved {
-    background-color: #614BC3; /* Morado oscuro para aprobado */
+    background-color: #EE82EE; /* Violet - Morado pastel más oscuro para aprobado */
     text-decoration: line-through;
     cursor: default;
 }
 
 .course-box.blocked {
-    background-color: #B9B4C7; /* Morado grisáceo para bloqueado */
+    background-color: #E6E6FA; /* LavenderBlush - Morado grisáceo muy claro para bloqueado */
+    color: #666; /* Un color de texto más suave para el bloqueado */
     cursor: not-allowed;
-    opacity: 0.8; /* Ligeramente menos opaco para que se vea el candado */
+    opacity: 0.9; /* Ligeramente más opaco para que se vea el candado y texto */
 }
 
 /* Recomendaciones */
@@ -136,7 +159,7 @@ body {
 }
 
 .recommendations-container h2 {
-    color: #4B3869; /* Un morado oscuro para el título */
+    color: #8A2BE2; /* BlueViolet - Morado vibrante para el título */
     margin-bottom: 15px;
 }
 
@@ -149,17 +172,17 @@ body {
 }
 
 #recommendedCourses .course-box {
-    background-color: #8F74B3; /* Un morado medio para las recomendaciones */
+    background-color: #BA55D3; /* MediumOrchid - Un morado pastel distinto para recomendaciones */
     color: white;
     cursor: default;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     text-decoration: none;
-    border-color: #8F74B3; /* Mismo color de fondo para el borde */
+    border-color: #BA55D3; /* Mismo color de fondo para el borde */
 }
 
 #refreshRecommendations {
     padding: 10px 20px;
-    background-color: #614BC3; /* Morado oscuro, similar a aprobado */
+    background-color: #EE82EE; /* Violet - Morado pastel, consistente con aprobado */
     color: white;
     border: none;
     border-radius: 5px;
@@ -169,7 +192,7 @@ body {
 }
 
 #refreshRecommendations:hover {
-    background-color: #4B3869; /* Un morado aún más oscuro al pasar el ratón */
+    background-color: #BA55D3; /* MediumOrchid - Morado pastel más oscuro al pasar el ratón */
 }
 
 /* Responsive adjustments */
