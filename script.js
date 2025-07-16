@@ -1,13 +1,16 @@
 // script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    const allCourses = coursesData; // Usamos la data de data.js
+    const LOCAL_STORAGE_KEY = 'mallaProgress'; // Clave para guardar en localStorage
+
+    let allCourses; // Esta variable contendrá la data, ya sea cargada o la inicial
+
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
     const semestersContainer = document.getElementById('semestersContainer');
     const recommendedCoursesDiv = document.getElementById('recommendedCourses');
     const refreshRecommendationsBtn = document.getElementById('refreshRecommendations');
-    const averageGradeText = document.getElementById('averageGradeText'); // Nuevo elemento para el promedio
+    const averageGradeText = document.getElementById('averageGradeText');
 
     // Objeto para almacenar los divs de cursos de cada semestre
     const semesterCoursesContainers = {};
@@ -22,6 +25,23 @@ document.addEventListener('DOMContentLoaded', () => {
         semesterDiv.appendChild(coursesDiv);
         semesterCoursesContainers[i] = coursesDiv; // Mapear semestre a su contenedor de cursos
     }
+
+    // --- Funciones de Guardado y Carga ---
+    function saveProgress() {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allCourses));
+    }
+
+    function loadProgress() {
+        const savedProgress = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (savedProgress) {
+            allCourses = JSON.parse(savedProgress);
+        } else {
+            // Si no hay progreso guardado, usa la data inicial de data.js
+            allCourses = coursesData.map(course => ({ ...course })); // Copia profunda para no modificar el original
+        }
+    }
+    // --- Fin Funciones de Guardado y Carga ---
+
 
     function isCourseBlocked(course) {
         // Un curso está bloqueado si tiene prerrequisitos y al menos uno no ha sido aprobado.
@@ -92,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateProgressBar();
                 updateAverageGrade(); // Actualizar el promedio
                 updateRecommendedCourses();
+                saveProgress(); // ¡Guardar el progreso después de cada cambio!
             });
 
             // Añadir el curso al contenedor de su semestre
@@ -181,9 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshRecommendationsBtn.addEventListener('click', updateRecommendedCourses);
 
 
-    // Llamadas iniciales
+    // --- Llamadas iniciales ---
+    loadProgress(); // Cargar el progreso al inicio
     renderMalla();
     updateProgressBar();
-    updateAverageGrade(); // Llamada inicial para el promedio
+    updateAverageGrade();
     updateRecommendedCourses();
 });
