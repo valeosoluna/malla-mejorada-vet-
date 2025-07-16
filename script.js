@@ -12,6 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const refreshRecommendationsBtn = document.getElementById('refreshRecommendations');
     const averageGradeText = document.getElementById('averageGradeText');
 
+    // Elementos del Modal
+    const courseModal = document.getElementById('courseModal');
+    const closeModalButtons = document.querySelectorAll('.modal-button.close, .close-button');
+    const modalCourseName = document.getElementById('modalCourseName');
+    const modalCourseSemester = document.getElementById('modalCourseSemester');
+    const modalCourseArea = document.getElementById('modalCourseArea');
+    const modalCourseDescription = document.getElementById('modalCourseDescription');
+    const modalCoursePrerequisites = document.getElementById('modalCoursePrerequisites');
+    const markAsApprovedBtn = document.getElementById('markAsApprovedBtn');
+
     // Objeto para almacenar los divs de cursos de cada semestre
     const semesterCoursesContainers = {};
     for (let i = 1; i <= 10; i++) {
@@ -90,29 +100,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Si ya está aprobado, desaprobarlo (vuelve a rosado pastel) y elimina la nota
                     clickedCourse.approved = false;
                     clickedCourse.grade = null;
-                } else {
-                    // Si no está aprobado
-                    if (!isCourseBlocked(clickedCourse)) {
-                        // Si no está bloqueado (es decir, está en rosado pastel), aprobarlo y pedir nota
-                        let gradeInput = prompt(`Ingresa la nota para "${clickedCourse.name}" (1.0 a 7.0):`);
-                        let grade = parseFloat(gradeInput);
-
-                        if (!isNaN(grade) && grade >= 1.0 && grade <= 7.0) {
-                            clickedCourse.approved = true;
-                            clickedCourse.grade = grade;
-                        } else if (gradeInput !== null) { // Si el usuario no canceló, pero la entrada es inválida
-                            alert("Nota inválida. Por favor, ingresa un número entre 1.0 y 7.0.");
-                        }
-                        // Si el usuario cancela el prompt, el ramo no se marca como aprobado y la nota sigue siendo null
-                    }
+                    renderMalla(); // Re-renderizar para actualizar estados
+                    updateProgressBar();
+                    updateAverageGrade(); // Actualizar el promedio
+                    updateRecommendedCourses();
+                    saveProgress(); // ¡Guardar el progreso después de cada cambio!
+                } else if (isCourseBlocked(clickedCourse)) {
                     // Si está bloqueado (gris con candado), no se hace nada al hacer clic.
+                    // Ya tiene cursor: not-allowed en CSS.
+                } else {
+                    // Si no está aprobado ni bloqueado, abrir el modal con la información
+                    openCourseModal(clickedCourse);
                 }
-                
-                renderMalla(); // Re-renderizar para actualizar estados
-                updateProgressBar();
-                updateAverageGrade(); // Actualizar el promedio
-                updateRecommendedCourses();
-                saveProgress(); // ¡Guardar el progreso después de cada cambio!
             });
 
             // Añadir el curso al contenedor de su semestre
@@ -121,6 +120,67 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Funciones del Modal ---
+    let currentCourseInModal = null; // Para saber qué ramo estamos viendo en el modal
+
+    function openCourseModal(course) {
+        currentCourseInModal = course; // Guardar el ramo actual
+        modalCourseName.textContent = course.name;
+        modalCourseSemester.textContent = course.semester;
+        modalCourseArea.textContent = course.area;
+        modalCourseDescription.textContent = course.description || "No hay descripción disponible."; // Mostrar descripción o mensaje
+        
+        // Mostrar nombres de prerrequisitos
+        if (course.prerequisites && course.prerequisites.length > 0) {
+            const prereqNames = course.prerequisites.map(prereqId => {
+                const prereqCourse = allCourses.find(c => c.id === prereqId);
+                return prereqCourse ? prereqCourse.name : `ID ${prereqId} (Desconocido)`;
+            }).join(', ');
+            modalCoursePrerequisites.textContent = prereqNames;
+        } else {
+            modalCoursePrerequisites.textContent = "Ninguno";
+        }
+
+        markAsApprovedBtn.onclick = () => {
+            let gradeInput = prompt(`Ingresa la nota para "${currentCourseInModal.name}" (1.0 a 7.0):`);
+            let grade = parseFloat(gradeInput);
+
+            if (!isNaN(grade) && grade >= 1.0 && grade <= 7.0) {
+                currentCourseInModal.approved = true;
+                currentCourseInModal.grade = grade;
+                closeCourseModal(); // Cerrar el modal después de aprobar
+                renderMalla(); // Re-renderizar para actualizar estados
+                updateProgressBar();
+                updateAverageGrade();
+                updateRecommendedCourses();
+                saveProgress();
+            } else if (gradeInput !== null) { // Si el usuario no canceló, pero la entrada es inválida
+                alert("Nota inválida. Por favor, ingresa un número entre 1.0 y 7.0.");
+            }
+        };
+
+        courseModal.style.display = 'flex'; // Mostrar el modal
+    }
+
+    function closeCourseModal() {
+        courseModal.style.display = 'none'; // Ocultar el modal
+        currentCourseInModal = null; // Limpiar el ramo actual
+    }
+
+    // Event listeners para cerrar el modal
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', closeCourseModal);
+    });
+
+    // Cerrar el modal si se hace clic fuera del contenido
+    window.addEventListener('click', (event) => {
+        if (event.target === courseModal) {
+            closeCourseModal();
+        }
+    });
+    // --- Fin Funciones del Modal ---
+
 
     function updateProgressBar() {
         const totalCourses = allCourses.length;
