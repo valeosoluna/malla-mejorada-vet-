@@ -1,0 +1,211 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.progress-container {
+    width: 80%;
+    max-width: 800px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin: 20px auto;
+    height: 30px;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #4CAF50; /* Verde inicial */
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    transition: width 0.5s ease-in-out;
+}
+
+.progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    left: 0;
+    line-height: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.area-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.area-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #0056b3;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* Colores de área */
+.basic-area {
+    border-left: 5px solid #007bff; /* Azul para Básica */
+}
+.disciplinary-area {
+    border-left: 5px solid #28a745; /* Verde para Disciplinar */
+}
+.elective-area {
+    border-left: 5px solid #ffc107; /* Amarillo para Electiva */
+}
+
+.cycles-container {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+.cycle {
+    flex: 1;
+    min-width: 45%;
+}
+
+.cycle h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.semesters-grid, .semester-group-basic, .semester-group-electiva {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Ajuste de columnas */
+    gap: 15px;
+}
+
+.semester {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: #6c757d;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.courses-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.course-box {
+    background-color: #28a745; /* Verde para no aprobado */
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative; /* Para el tachado */
+}
+
+.course-box:hover:not(.approved):not(.blocked) {
+    opacity: 0.8;
+}
+
+.course-box.approved {
+    background-color: #ff8c00; /* Naranjo para aprobado */
+    text-decoration: line-through;
+    cursor: default;
+}
+
+.course-box.blocked {
+    background-color: #ccc; /* Gris para bloqueado */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Recomendaciones */
+.recommendations-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 30px;
+    text-align: center;
+}
+
+.recommendations-container h2 {
+    color: #0056b3;
+    margin-bottom: 15px;
+}
+
+#recommendedCourses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#recommendedCourses .course-box {
+    background-color: #17a2b8; /* Un color distinto para las recomendaciones */
+    color: white;
+    cursor: default;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-decoration: none; /* Asegura que no estén tachados */
+}
+
+#refreshRecommendations {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#refreshRecommendations:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .cycles-container {
+        flex-direction: column;
+    }
+    .cycle {
+        min-width: 100%;
+    }
+    .semesters-grid, .semester-group-basic, .semester-group-electiva {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .semesters-grid, .semester-group-basic, .semester-group-electiva {
+        grid-template-columns: 1fr;
+    }
+}
