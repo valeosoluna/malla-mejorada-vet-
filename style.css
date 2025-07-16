@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4; /* Fondo claro para contraste */
     color: #333;
 }
 
@@ -15,7 +15,7 @@ body {
 .progress-container {
     width: 80%;
     max-width: 800px;
-    background-color: #e0e0e0;
+    background-color: #e0e0e0; /* Fondo de la barra de progreso */
     border-radius: 5px;
     margin: 20px auto;
     height: 30px;
@@ -26,7 +26,7 @@ body {
 .progress-bar {
     height: 100%;
     width: 0%;
-    background-color: #4CAF50; /* Verde inicial */
+    background-color: #A084E8; /* Morado claro para el progreso inicial */
     border-radius: 5px;
     text-align: center;
     line-height: 30px;
@@ -46,24 +46,24 @@ body {
 }
 
 .main-content {
-    overflow-x: auto; /* Permite scroll horizontal si hay muchos semestres */
+    overflow-x: auto;
     padding-bottom: 20px;
 }
 
 .semesters-container {
-    display: flex; /* Para organizar los semestres en columnas */
-    gap: 15px; /* Espacio entre columnas de semestre */
+    display: flex;
+    gap: 15px;
     padding: 10px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    min-width: fit-content; /* Para que no se encoja si hay muchos semestres */
+    min-width: fit-content;
 }
 
 .semester {
-    flex-shrink: 0; /* Evita que los semestres se encojan */
-    width: 180px; /* Ancho fijo para cada columna de semestre */
-    background-color: #e9ecef;
+    flex-shrink: 0;
+    width: 180px;
+    background-color: #e9ecef; /* Fondo de la columna del semestre */
     padding: 10px;
     border-radius: 5px;
     text-align: center;
@@ -81,12 +81,12 @@ body {
 .courses-container {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Espacio entre los recuadros de los ramos */
+    gap: 8px;
     margin-top: 10px;
 }
 
 .course-box {
-    background-color: #28a745; /* Verde para no aprobado */
+    background-color: #A084E8; /* Morado lavanda para ramos no aprobados/disponibles */
     color: white;
     padding: 10px;
     border-radius: 5px;
@@ -102,28 +102,27 @@ body {
     opacity: 0.8;
 }
 
-/* Colores de borde por área */
+/* Colores de borde por área (rosados/morados) */
 .course-box.Básica {
-    border-color: #007bff; /* Azul para Básica */
+    border-color: #E2BBE9; /* Rosa claro para Básica */
 }
 .course-box.Disciplinar {
-    border-color: #28a745; /* Verde para Disciplinar */
+    border-color: #CC7B82; /* Rosa más oscuro para Disciplinar */
 }
 .course-box.Electiva {
-    border-color: #ffc107; /* Amarillo para Electiva */
+    border-color: #AA7BCC; /* Morado violáceo para Electiva */
 }
 
-
 .course-box.approved {
-    background-color: #ff8c00; /* Naranjo para aprobado */
+    background-color: #614BC3; /* Morado oscuro para aprobado */
     text-decoration: line-through;
     cursor: default;
 }
 
 .course-box.blocked {
-    background-color: #ccc; /* Gris para bloqueado */
-    cursor: not-allowed; /* Cambiado a not-allowed para indicar que NO se puede hacer clic */
-    opacity: 0.6;
+    background-color: #B9B4C7; /* Morado grisáceo para bloqueado */
+    cursor: not-allowed;
+    opacity: 0.8; /* Ligeramente menos opaco para que se vea el candado */
 }
 
 /* Recomendaciones */
@@ -137,7 +136,7 @@ body {
 }
 
 .recommendations-container h2 {
-    color: #0056b3;
+    color: #4B3869; /* Un morado oscuro para el título */
     margin-bottom: 15px;
 }
 
@@ -150,17 +149,17 @@ body {
 }
 
 #recommendedCourses .course-box {
-    background-color: #17a2b8; /* Un color distinto para las recomendaciones */
+    background-color: #8F74B3; /* Un morado medio para las recomendaciones */
     color: white;
     cursor: default;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-decoration: none; /* Asegura que no estén tachados */
-    border-color: #17a2b8; /* Mismo color de fondo para el borde */
+    text-decoration: none;
+    border-color: #8F74B3; /* Mismo color de fondo para el borde */
 }
 
 #refreshRecommendations {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #614BC3; /* Morado oscuro, similar a aprobado */
     color: white;
     border: none;
     border-radius: 5px;
@@ -170,24 +169,24 @@ body {
 }
 
 #refreshRecommendations:hover {
-    background-color: #0056b3;
+    background-color: #4B3869; /* Un morado aún más oscuro al pasar el ratón */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .semesters-container {
-        flex-wrap: wrap; /* Permite que los semestres se envuelvan en pantallas pequeñas */
+        flex-wrap: wrap;
         justify-content: center;
     }
     .semester {
-        width: 45%; /* Ajuste de ancho para 2 columnas en tablets */
+        width: 45%;
         min-width: 150px;
     }
 }
 
 @media (max-width: 480px) {
     .semester {
-        width: 90%; /* Ajuste de ancho para 1 columna en móviles */
+        width: 90%;
         min-width: unset;
     }
 }
