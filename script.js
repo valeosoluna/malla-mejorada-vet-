@@ -52,22 +52,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 courseBox.classList.add('approved');
             } else if (isCourseBlocked(course)) {
                 courseBox.classList.add('blocked');
+                courseBox.textContent += ' 🔒'; // Añadir emoji de candado
             }
-            // Si no está aprobado ni bloqueado, se queda con el color por defecto (verde)
+            // Si no está aprobado ni bloqueado, se queda con el color por defecto (morado claro)
 
             courseBox.addEventListener('click', () => {
                 const clickedCourse = allCourses.find(c => c.id === course.id);
 
                 if (clickedCourse.approved) {
-                    // Si ya está aprobado, desaprobarlo (vuelve a verde)
+                    // Si ya está aprobado, desaprobarlo (vuelve a morado claro)
                     clickedCourse.approved = false;
                 } else {
                     // Si no está aprobado
                     if (!isCourseBlocked(clickedCourse)) {
-                        // Si no está bloqueado (es decir, está en verde), aprobarlo
+                        // Si no está bloqueado (es decir, está en morado claro), aprobarlo
                         clickedCourse.approved = true;
                     }
-                    // Si está bloqueado (gris), no se hace nada al hacer clic.
+                    // Si está bloqueado (gris con candado), no se hace nada al hacer clic.
                 }
                 
                 renderMalla(); // Re-renderizar para actualizar estados
@@ -91,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
         progressText.textContent = `${percentage.toFixed(0)}%`;
 
         if (percentage > 0) {
-            progressBar.style.backgroundColor = '#ff8c00'; // Naranjo cuando hay progreso
+            progressBar.style.backgroundColor = '#614BC3'; // Morado oscuro para el progreso
         } else {
-            progressBar.style.backgroundColor = '#4CAF50'; // Verde inicial
+            progressBar.style.backgroundColor = '#A084E8'; // Morado claro inicial
         }
     }
 
