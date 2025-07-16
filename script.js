@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const semestersContainer = document.getElementById('semestersContainer');
     const recommendedCoursesDiv = document.getElementById('recommendedCourses');
     const refreshRecommendationsBtn = document.getElementById('refreshRecommendations');
+    const averageGradeText = document.getElementById('averageGradeText'); // Nuevo elemento para el promedio
 
     // Objeto para almacenar los divs de cursos de cada semestre
     const semesterCoursesContainers = {};
@@ -43,7 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const courseBox = document.createElement('div');
             courseBox.classList.add('course-box');
             courseBox.setAttribute('data-id', course.id);
-            courseBox.textContent = course.name;
+            
+            // Mostrar nombre del ramo y nota si está aprobado
+            if (course.approved && course.grade !== null) {
+                courseBox.textContent = `${course.name} (${course.grade.toFixed(1)})`;
+            } else {
+                courseBox.textContent = course.name;
+            }
 
             // Añadir clase para el borde de color según el área
             courseBox.classList.add(course.area);
@@ -54,25 +61,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 courseBox.classList.add('blocked');
                 courseBox.textContent += ' 🔒'; // Añadir emoji de candado
             }
-            // Si no está aprobado ni bloqueado, se queda con el color por defecto (morado claro)
+            // Si no está aprobado ni bloqueado, se queda con el color por defecto (rosado pastel)
 
             courseBox.addEventListener('click', () => {
                 const clickedCourse = allCourses.find(c => c.id === course.id);
 
                 if (clickedCourse.approved) {
-                    // Si ya está aprobado, desaprobarlo (vuelve a morado claro)
+                    // Si ya está aprobado, desaprobarlo (vuelve a rosado pastel) y elimina la nota
                     clickedCourse.approved = false;
+                    clickedCourse.grade = null;
                 } else {
                     // Si no está aprobado
                     if (!isCourseBlocked(clickedCourse)) {
-                        // Si no está bloqueado (es decir, está en morado claro), aprobarlo
-                        clickedCourse.approved = true;
+                        // Si no está bloqueado (es decir, está en rosado pastel), aprobarlo y pedir nota
+                        let gradeInput = prompt(`Ingresa la nota para "${clickedCourse.name}" (1.0 a 7.0):`);
+                        let grade = parseFloat(gradeInput);
+
+                        if (!isNaN(grade) && grade >= 1.0 && grade <= 7.0) {
+                            clickedCourse.approved = true;
+                            clickedCourse.grade = grade;
+                        } else if (gradeInput !== null) { // Si el usuario no canceló, pero la entrada es inválida
+                            alert("Nota inválida. Por favor, ingresa un número entre 1.0 y 7.0.");
+                        }
+                        // Si el usuario cancela el prompt, el ramo no se marca como aprobado y la nota sigue siendo null
                     }
                     // Si está bloqueado (gris con candado), no se hace nada al hacer clic.
                 }
                 
                 renderMalla(); // Re-renderizar para actualizar estados
                 updateProgressBar();
+                updateAverageGrade(); // Actualizar el promedio
                 updateRecommendedCourses();
             });
 
@@ -92,9 +110,25 @@ document.addEventListener('DOMContentLoaded', () => {
         progressText.textContent = `${percentage.toFixed(0)}%`;
 
         if (percentage > 0) {
-            progressBar.style.backgroundColor = '#614BC3'; // Morado oscuro para el progreso
+            progressBar.style.backgroundColor = '#EE82EE'; // Violet - Morado pastel para el progreso
         } else {
-            progressBar.style.backgroundColor = '#A084E8'; // Morado claro inicial
+            progressBar.style.backgroundColor = '#FFC0CB'; // Pink - Rosado pastel inicial
+        }
+    }
+
+    function updateAverageGrade() {
+        const gradedApprovedCourses = allCourses.filter(course => course.approved && course.grade !== null);
+        
+        let totalGrade = 0;
+        gradedApprovedCourses.forEach(course => {
+            totalGrade += course.grade;
+        });
+
+        if (gradedApprovedCourses.length > 0) {
+            const average = totalGrade / gradedApprovedCourses.length;
+            averageGradeText.textContent = `Promedio de ramos aprobados: ${average.toFixed(2)}`;
+        } else {
+            averageGradeText.textContent = 'Promedio de ramos aprobados: N/A';
         }
     }
 
@@ -150,5 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Llamadas iniciales
     renderMalla();
     updateProgressBar();
+    updateAverageGrade(); // Llamada inicial para el promedio
     updateRecommendedCourses();
 });
