@@ -1,9 +1,10 @@
 // script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    const LOCAL_STORAGE_KEY = 'mallaProgress'; // Clave para guardar en localStorage
+    const LOCAL_STORAGE_KEY = 'mallaProgress'; // Key to save to localStorage
+    const THEME_STORAGE_KEY = 'mallaTheme'; // Key for theme preference
 
-    let allCourses; // Esta variable contendrá la data, ya sea cargada o la inicial
+    let allCourses; // This variable will contain the data, either loaded or initial
 
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
@@ -11,8 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const recommendedCoursesDiv = document.getElementById('recommendedCourses');
     const refreshRecommendationsBtn = document.getElementById('refreshRecommendations');
     const averageGradeText = document.getElementById('averageGradeText');
+    const themeToggle = document.querySelector('.theme-toggle');
 
-    // Elementos del Modal
+    // Modal elements
     const courseModal = document.getElementById('courseModal');
     const closeModalButtons = document.querySelectorAll('.modal-button.close, .close-button');
     const modalCourseName = document.getElementById('modalCourseName');
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCoursePrerequisites = document.getElementById('modalCoursePrerequisites');
     const markAsApprovedBtn = document.getElementById('markAsApprovedBtn');
 
-    // Objeto para almacenar los divs de cursos de cada semestre
+    // Object to store course divs for each semester
     const semesterCoursesContainers = {};
     for (let i = 1; i <= 10; i++) {
         const semesterDiv = document.createElement('div');
@@ -33,10 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const coursesDiv = document.createElement('div');
         coursesDiv.classList.add('courses-container');
         semesterDiv.appendChild(coursesDiv);
-        semesterCoursesContainers[i] = coursesDiv; // Mapear semestre a su contenedor de cursos
+        semesterCoursesContainers[i] = coursesDiv; // Map semester to its course container
     }
 
-    // --- Funciones de Guardado y Carga ---
+    // --- Save and Load Functions ---
     function saveProgress() {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allCourses));
     }
@@ -46,15 +48,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (savedProgress) {
             allCourses = JSON.parse(savedProgress);
         } else {
-            // Si no hay progreso guardado, usa la data inicial de data.js
-            allCourses = coursesData.map(course => ({ ...course })); // Copia profunda para no modificar el original
+            // If no saved progress, use initial data from data.js
+            allCourses = coursesData.map(course => ({ ...course })); // Deep copy to avoid modifying original
         }
     }
-    // --- Fin Funciones de Guardado y Carga ---
+    // --- End Save and Load Functions ---
+
+    // --- Dark/Light Mode Functions ---
+    function loadTheme() {
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        if (savedTheme) {
+            document.body.classList.add(savedTheme);
+            themeToggle.setAttribute('aria-checked', savedTheme === 'dark-mode');
+        } else {
+            // Default to light mode if no preference
+            document.body.classList.add('light-mode');
+            themeToggle.setAttribute('aria-checked', false);
+        }
+    }
+
+    function toggleTheme() {
+        if (document.body.classList.contains('dark-mode')) {
+            document.body.classList.remove('dark-mode');
+            document.body.classList.add('light-mode');
+            localStorage.setItem(THEME_STORAGE_KEY, 'light-mode');
+            themeToggle.setAttribute('aria-checked', false);
+        } else {
+            document.body.classList.remove('light-mode');
+            document.body.classList.add('dark-mode');
+            localStorage.setItem(THEME_STORAGE_KEY, 'dark-mode');
+            themeToggle.setAttribute('aria-checked', true);
+        }
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+    // --- End Dark/Light Mode Functions ---
 
 
     function isCourseBlocked(course) {
-        // Un curso está bloqueado si tiene prerrequisitos y al menos uno no ha sido aprobado.
+        // A course is blocked if it has prerequisites and at least one has not been approved.
         if (!course.prerequisites || course.prerequisites.length === 0) {
             return false;
         }
@@ -65,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderMalla() {
-        // Limpiar todos los contenedores de ramos antes de volver a renderizar
+        // Clear all semester containers before re-rendering
         for (const sem in semesterCoursesContainers) {
             semesterCoursesContainers[sem].innerHTML = '';
         }
@@ -74,64 +106,71 @@ document.addEventListener('DOMContentLoaded', () => {
             const courseBox = document.createElement('div');
             courseBox.classList.add('course-box');
             courseBox.setAttribute('data-id', course.id);
-            
-            // Mostrar nombre del ramo y nota si está aprobado
+            courseBox.setAttribute('data-tooltip', course.description || 'No hay descripción disponible.'); // Add tooltip
+
+            // Show course name and grade if approved
             if (course.approved && course.grade !== null) {
                 courseBox.textContent = `${course.name} (${course.grade.toFixed(1)})`;
             } else {
                 courseBox.textContent = course.name;
             }
 
-            // Añadir clase para el borde de color según el área
+            // Add class for border color based on area
             courseBox.classList.add(course.area);
 
             if (course.approved) {
                 courseBox.classList.add('approved');
             } else if (isCourseBlocked(course)) {
                 courseBox.classList.add('blocked');
-                courseBox.textContent += ' 🔒'; // Añadir emoji de candado
+                courseBox.textContent += ' 🔒'; // Add padlock emoji
             }
-            // Si no está aprobado ni bloqueado, se queda con el color por defecto (rosado pastel)
+            // If not approved or blocked, it keeps its default color (pastel pink)
 
             courseBox.addEventListener('click', () => {
+                // Add click animation class
+                courseBox.classList.add('clicked');
+                setTimeout(() => {
+                    courseBox.classList.remove('clicked');
+                }, 300); // Remove class after animation duration
+
                 const clickedCourse = allCourses.find(c => c.id === course.id);
 
                 if (clickedCourse.approved) {
-                    // Si ya está aprobado, desaprobarlo (vuelve a rosado pastel) y elimina la nota
+                    // If already approved, unapprove it (returns to pastel pink) and remove grade
                     clickedCourse.approved = false;
                     clickedCourse.grade = null;
-                    renderMalla(); // Re-renderizar para actualizar estados
+                    renderMalla(); // Re-render to update states
                     updateProgressBar();
-                    updateAverageGrade(); // Actualizar el promedio
+                    updateAverageGrade(); // Update average
                     updateRecommendedCourses();
-                    saveProgress(); // ¡Guardar el progreso después de cada cambio!
+                    saveProgress(); // Save progress after each change!
                 } else if (isCourseBlocked(clickedCourse)) {
-                    // Si está bloqueado (gris con candado), no se hace nada al hacer clic.
-                    // Ya tiene cursor: not-allowed en CSS.
+                    // If blocked (gray with padlock), do nothing on click.
+                    // Already has cursor: not-allowed in CSS.
                 } else {
-                    // Si no está aprobado ni bloqueado, abrir el modal con la información
+                    // If not approved or blocked, open the modal with information
                     openCourseModal(clickedCourse);
                 }
             });
 
-            // Añadir el curso al contenedor de su semestre
+            // Add the course to its semester container
             if (semesterCoursesContainers[course.semester]) {
                 semesterCoursesContainers[course.semester].appendChild(courseBox);
             }
         });
     }
 
-    // --- Funciones del Modal ---
-    let currentCourseInModal = null; // Para saber qué ramo estamos viendo en el modal
+    // --- Modal Functions ---
+    let currentCourseInModal = null; // To know which course we are viewing in the modal
 
     function openCourseModal(course) {
-        currentCourseInModal = course; // Guardar el ramo actual
+        currentCourseInModal = course; // Save the current course
         modalCourseName.textContent = course.name;
         modalCourseSemester.textContent = course.semester;
         modalCourseArea.textContent = course.area;
-        modalCourseDescription.textContent = course.description || "No hay descripción disponible."; // Mostrar descripción o mensaje
-        
-        // Mostrar nombres de prerrequisitos
+        modalCourseDescription.textContent = course.description || "No hay descripción disponible."; // Show description or message
+
+        // Show prerequisite names
         if (course.prerequisites && course.prerequisites.length > 0) {
             const prereqNames = course.prerequisites.map(prereqId => {
                 const prereqCourse = allCourses.find(c => c.id === prereqId);
@@ -149,37 +188,37 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isNaN(grade) && grade >= 1.0 && grade <= 7.0) {
                 currentCourseInModal.approved = true;
                 currentCourseInModal.grade = grade;
-                closeCourseModal(); // Cerrar el modal después de aprobar
-                renderMalla(); // Re-renderizar para actualizar estados
+                closeCourseModal(); // Close the modal after approving
+                renderMalla(); // Re-render to update states
                 updateProgressBar();
                 updateAverageGrade();
                 updateRecommendedCourses();
                 saveProgress();
-            } else if (gradeInput !== null) { // Si el usuario no canceló, pero la entrada es inválida
+            } else if (gradeInput !== null) { // If the user didn't cancel, but the input is invalid
                 alert("Nota inválida. Por favor, ingresa un número entre 1.0 y 7.0.");
             }
         };
 
-        courseModal.style.display = 'flex'; // Mostrar el modal
+        courseModal.style.display = 'flex'; // Show the modal
     }
 
     function closeCourseModal() {
-        courseModal.style.display = 'none'; // Ocultar el modal
-        currentCourseInModal = null; // Limpiar el ramo actual
+        courseModal.style.display = 'none'; // Hide the modal
+        currentCourseInModal = null; // Clear the current course
     }
 
-    // Event listeners para cerrar el modal
+    // Event listeners to close the modal
     closeModalButtons.forEach(button => {
         button.addEventListener('click', closeCourseModal);
     });
 
-    // Cerrar el modal si se hace clic fuera del contenido
+    // Close the modal if clicked outside the content
     window.addEventListener('click', (event) => {
         if (event.target === courseModal) {
             closeCourseModal();
         }
     });
-    // --- Fin Funciones del Modal ---
+    // --- End Modal Functions ---
 
 
     function updateProgressBar() {
@@ -191,15 +230,15 @@ document.addEventListener('DOMContentLoaded', () => {
         progressText.textContent = `${percentage.toFixed(0)}%`;
 
         if (percentage > 0) {
-            progressBar.style.backgroundColor = '#EE82EE'; // Violet - Morado pastel para el progreso
+            progressBar.style.backgroundColor = 'var(--progress-fill-color)';
         } else {
-            progressBar.style.backgroundColor = '#FFC0CB'; // Pink - Rosado pastel inicial
+            progressBar.style.backgroundColor = 'var(--progress-empty-color)';
         }
     }
 
     function updateAverageGrade() {
         const gradedApprovedCourses = allCourses.filter(course => course.approved && course.grade !== null);
-        
+
         let totalGrade = 0;
         gradedApprovedCourses.forEach(course => {
             totalGrade += course.grade;
@@ -215,12 +254,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateRecommendedCourses() {
         recommendedCoursesDiv.innerHTML = '';
-        // Filtrar cursos no aprobados y no bloqueados
+        // Filter unapproved and unblocked courses
         const availableCourses = allCourses.filter(course => !course.approved && !isCourseBlocked(course));
 
-        // Ordenar para priorizar:
-        // 1. Ramos de semestres más tempranos.
-        // 2. Ramos que son prerrequisitos para más otros ramos (impacto).
+        // Sort to prioritize:
+        // 1. Courses from earlier semesters.
+        // 2. Courses that are prerequisites for more other courses (impact).
         const sortedRecommendations = availableCourses.sort((a, b) => {
             if (a.semester !== b.semester) {
                 return a.semester - b.semester;
@@ -239,10 +278,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const impactA = getImpact(a.id);
             const impactB = getImpact(b.id);
 
-            return impactB - impactA; // Mayor impacto primero
+            return impactB - impactA; // Higher impact first
         });
 
-        const recommendationsToShow = sortedRecommendations.slice(0, 6); // Máximo 6
+        const recommendationsToShow = sortedRecommendations.slice(0, 6); // Max 6
 
         if (recommendationsToShow.length === 0) {
             recommendedCoursesDiv.textContent = 'No hay ramos disponibles para recomendar en este momento.';
@@ -251,8 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const courseBox = document.createElement('div');
                 courseBox.classList.add('course-box');
                 courseBox.textContent = course.name;
-                // No aplicar estados 'approved' o 'blocked' a las recomendaciones
-                // Pero sí el color de área para consistencia
+                // Don't apply 'approved' or 'blocked' states to recommendations
+                // But do apply area color for consistency
                 courseBox.classList.add(course.area);
                 recommendedCoursesDiv.appendChild(courseBox);
             });
@@ -261,9 +300,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     refreshRecommendationsBtn.addEventListener('click', updateRecommendedCourses);
 
+    // --- Tooltip Logic ---
+    let tooltipTimeout;
+    document.addEventListener('mouseover', (event) => {
+        const target = event.target;
+        const tooltipText = target.getAttribute('data-tooltip');
 
-    // --- Llamadas iniciales ---
-    loadProgress(); // Cargar el progreso al inicio
+        if (tooltipText) {
+            // Clear any existing tooltip
+            clearTimeout(tooltipTimeout);
+            const existingTooltip = document.querySelector('.tooltip');
+            if (existingTooltip) {
+                existingTooltip.remove();
+            }
+
+            tooltipTimeout = setTimeout(() => {
+                const tooltip = document.createElement('div');
+                tooltip.classList.add('tooltip');
+                tooltip.textContent = tooltipText;
+                document.body.appendChild(tooltip);
+
+                // Position the tooltip
+                const rect = target.getBoundingClientRect();
+                tooltip.style.left = `${rect.left + rect.width / 2}px`;
+                tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`; // Above the element
+
+                // Adjust if too close to screen edges
+                if (rect.top - tooltip.offsetHeight - 10 < 0) { // If it goes off top
+                    tooltip.style.top = `${rect.bottom + 10}px`; // Place below
+                }
+                if (rect.left + rect.width / 2 + tooltip.offsetWidth / 2 > window.innerWidth) { // If it goes off right
+                    tooltip.style.left = `${window.innerWidth - tooltip.offsetWidth - 5}px`;
+                }
+                if (rect.left + rect.width / 2 - tooltip.offsetWidth / 2 < 0) { // If it goes off left
+                    tooltip.style.left = `5px`;
+                }
+                tooltip.style.transform = 'translateX(-50%)'; // Center horizontally
+            }, 500); // Delay before showing tooltip
+        }
+    });
+
+    document.addEventListener('mouseout', (event) => {
+        const target = event.target;
+        if (target.hasAttribute('data-tooltip')) {
+            clearTimeout(tooltipTimeout);
+            const existingTooltip = document.querySelector('.tooltip');
+            if (existingTooltip) {
+                existingTooltip.remove();
+            }
+        }
+    });
+    // --- End Tooltip Logic ---
+
+
+    // --- Initial Calls ---
+    loadTheme(); // Load theme preference first
+    loadProgress(); // Load progress at the start
     renderMalla();
     updateProgressBar();
     updateAverageGrade();
