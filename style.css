@@ -1,37 +1,169 @@
 /* style.css */
+
+/* Define CSS Variables for Light Mode */
+body.light-mode {
+    --bg-color: #FFF0F5; /* LavenderBlush - a very light, soft pink */
+    --text-color: #333;
+    --header-color: #333;
+    --progress-bg-color: #E0E0E0; /* Progress bar background */
+    --progress-empty-color: #FFC0CB; /* Initial pastel pink for progress */
+    --progress-fill-color: #EE82EE; /* Violet - pastel purple for progress */
+    --average-grade-bg: #F8F8FF; /* GhostWhite - very light background */
+    --average-grade-text-color: #8A2BE2; /* BlueViolet - vibrant purple */
+    --semesters-bg-color: #fff;
+    --semester-column-bg: #F8F8FF; /* GhostWhite - Semester column background */
+    --semester-text-color: #6c757d;
+    --course-box-default-bg: #FFC0CB; /* Pink - Pastel pink for unapproved/available courses */
+    --course-box-approved-bg: #EE82EE; /* Violet - Darker pastel purple for approved */
+    --course-box-blocked-bg: #E6E6FA; /* Lavender - Very light grayish purple for blocked */
+    --course-box-blocked-text: #666;
+    --recommendations-bg-color: #fff;
+    --recommendations-title-color: #8A2BE2; /* BlueViolet - vibrant purple for title */
+    --recommended-course-bg: #BA55D3; /* MediumOrchid - a distinct pastel purple for recommendations */
+    --refresh-button-bg: #EE82EE;
+    --refresh-button-hover-bg: #BA55D3;
+    --modal-bg-color: rgba(0, 0, 0, 0.5);
+    --modal-content-bg: #fff;
+    --modal-text-color: #333;
+    --modal-button-approve-bg: #EE82EE;
+    --modal-button-approve-hover-bg: #BA55D3;
+    --modal-button-close-bg: #6c757d;
+    --modal-button-close-hover-bg: #5a6268;
+    --tooltip-bg: #333;
+    --tooltip-text: #fff;
+    --toggle-button-bg: #E0E0E0;
+    --toggle-icon-color: #FFD700; /* Gold for sun */
+    --toggle-icon-active-color: #ADD8E6; /* Light Blue for moon */
+}
+
+/* Define CSS Variables for Dark Mode */
+body.dark-mode {
+    --bg-color: #2c2c2c; /* Dark gray for background */
+    --text-color: #e0e0e0; /* Light gray for text */
+    --header-color: #f0f0f0;
+    --progress-bg-color: #555;
+    --progress-empty-color: #777;
+    --progress-fill-color: #9370DB; /* MediumPurple */
+    --average-grade-bg: #444;
+    --average-grade-text-color: #BA55D3; /* MediumOrchid */
+    --semesters-bg-color: #3c3c3c;
+    --semester-column-bg: #444;
+    --semester-text-color: #bbb;
+    --course-box-default-bg: #555;
+    --course-box-approved-bg: #9370DB; /* MediumPurple */
+    --course-box-blocked-bg: #666;
+    --course-box-blocked-text: #aaa;
+    --recommendations-bg-color: #3c3c3c;
+    --recommendations-title-color: #BA55D3; /* MediumOrchid */
+    --recommended-course-bg: #8A2BE2; /* BlueViolet */
+    --refresh-button-bg: #9370DB;
+    --refresh-button-hover-bg: #8A2BE2;
+    --modal-bg-color: rgba(0, 0, 0, 0.7);
+    --modal-content-bg: #444;
+    --modal-text-color: #e0e0e0;
+    --modal-button-approve-bg: #9370DB;
+    --modal-button-approve-hover-bg: #8A2BE2;
+    --modal-button-close-bg: #888;
+    --modal-button-close-hover-bg: #777;
+    --tooltip-bg: #eee;
+    --tooltip-text: #333;
+    --toggle-button-bg: #666;
+    --toggle-icon-color: #eee; /* Light color for moon */
+    --toggle-icon-active-color: #FFD700; /* Gold for sun */
+}
+
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #FFF0F5; /* LavenderBlush - un rosa muy claro y suave */
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth transition for theme change */
+    line-height: 1.6;
 }
 
 .header {
     text-align: center;
     margin-bottom: 30px;
+    position: relative; /* For positioning the theme toggle */
 }
+
+.header h1 {
+    color: var(--header-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 2.2em;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 60px;
+    height: 30px;
+    background-color: var(--toggle-button-bg);
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.theme-toggle-icon {
+    font-size: 1.2em;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.theme-toggle-icon.light {
+    color: var(--toggle-icon-color);
+    opacity: 1;
+}
+
+.theme-toggle-icon.dark {
+    color: var(--toggle-icon-active-color);
+    opacity: 0; /* Hidden by default in light mode */
+    transform: translateX(-100%); /* Start off-screen */
+}
+
+/* Dark mode specific for toggle */
+body.dark-mode .theme-toggle-icon.light {
+    opacity: 0;
+    transform: translateX(100%); /* Move sun off-screen */
+}
+
+body.dark-mode .theme-toggle-icon.dark {
+    opacity: 1;
+    transform: translateX(0); /* Bring moon in */
+}
+
 
 .progress-container {
     width: 80%;
     max-width: 800px;
-    background-color: #E0E0E0; /* Fondo de la barra de progreso */
+    background-color: var(--progress-bg-color);
     border-radius: 5px;
-    margin: 20px auto 10px auto; /* Ajuste margen inferior */
+    margin: 20px auto 10px auto;
     height: 30px;
     position: relative;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    overflow: hidden; /* Ensure progress bar doesn't overflow */
 }
 
 .progress-bar {
     height: 100%;
     width: 0%;
-    background-color: #FFC0CB; /* Pink - Rosado pastel para el progreso inicial */
+    background-color: var(--progress-empty-color);
     border-radius: 5px;
     text-align: center;
     line-height: 30px;
-    color: white;
-    transition: width 0.5s ease-in-out;
+    color: white; /* Text color on the bar */
+    transition: width 0.7s ease-in-out, background-color 0.7s ease; /* Smooth transition for width and color */
 }
 
 .progress-text {
@@ -42,23 +174,26 @@ body {
     left: 0;
     line-height: 30px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-color); /* Text color outside the bar */
+    text-shadow: 0 0 2px rgba(0,0,0,0.1);
 }
 
-/* Estilos para el promedio de ramos */
+/* Styles for average grade */
 .average-grade-container {
     margin-top: 10px;
     font-size: 1.1em;
     font-weight: bold;
-    color: #555;
-    background-color: #F8F8FF; /* GhostWhite - fondo muy claro */
+    color: var(--average-grade-text-color);
+    background-color: var(--average-grade-bg);
     padding: 8px 15px;
     border-radius: 5px;
-    display: inline-block; /* Para que el fondo se ajuste al texto */
+    display: inline-block;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 .average-grade-text {
-    color: #8A2BE2; /* BlueViolet - Morado vibrante para el texto */
+    color: var(--average-grade-text-color);
+    transition: color 0.5s ease;
 }
 
 
@@ -70,239 +205,403 @@ body {
 .semesters-container {
     display: flex;
     gap: 15px;
-    padding: 10px;
-    background-color: #fff;
+    padding: 15px;
+    background-color: var(--semesters-bg-color);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     min-width: fit-content;
+    transition: background-color 0.5s ease;
+    flex-wrap: nowrap; /* Prevent wrapping for horizontal scroll */
 }
 
 .semester {
     flex-shrink: 0;
-    width: 180px;
-    background-color: #F8F8FF; /* GhostWhite - Fondo de la columna del semestre */
-    padding: 10px;
-    border-radius: 5px;
+    width: 200px; /* Slightly wider for better content display */
+    background-color: var(--semester-column-bg);
+    padding: 15px;
+    border-radius: 8px;
     text-align: center;
     font-weight: bold;
-    color: #6c757d;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    color: var(--semester-text-color);
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .semester h3 {
     margin-top: 0;
-    margin-bottom: 10px;
-    color: #333;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    font-size: 1.3em;
+    transition: color 0.5s ease;
 }
 
 .courses-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     margin-top: 10px;
 }
 
 .course-box {
-    background-color: #FFC0CB; /* Pink - Rosado pastel para ramos no aprobados/disponibles */
+    background-color: var(--course-box-default-bg);
     color: white;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 8px;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     position: relative;
-    border: 2px solid transparent; /* Borde para el color de área */
-    display: flex; /* Para centrar contenido y el emoji */
+    border: 2px solid transparent;
+    display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px; /* Asegura un mínimo de altura para el contenido */
-    line-height: 1.2; /* Ajusta interlineado para nombres largos */
+    min-height: 50px; /* Ensure minimum height */
+    line-height: 1.3;
+    font-size: 0.95em;
+    font-weight: 500;
 }
 
 .course-box:hover:not(.approved):not(.blocked) {
-    opacity: 0.8;
+    opacity: 0.9;
+    transform: translateY(-2px); /* Slight lift on hover */
 }
 
-/* Colores de borde por área (pasteles variados) */
+/* Click animation */
+.course-box.clicked {
+    animation: click-animation 0.3s forwards;
+}
+
+@keyframes click-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+}
+
+
+/* Border colors by area (pastels) */
 .course-box.Básica {
-    border-color: #ADD8E6; /* LightBlue - Azul claro pastel */
+    border-color: #ADD8E6; /* LightBlue - Light blue pastel */
 }
 .course-box.Disciplinar {
-    border-color: #98FB98; /* PaleGreen - Verde pálido pastel */
+    border-color: #98FB98; /* PaleGreen - Pale green pastel */
 }
 .course-box.Electiva {
-    border-color: #FFDAB9; /* PeachPuff - Durazno pastel */
+    border-color: #FFDAB9; /* PeachPuff - Peach pastel */
 }
 
+/* Dark mode border colors by area */
+body.dark-mode .course-box.Básica {
+    border-color: #6A5ACD; /* SlateBlue */
+}
+body.dark-mode .course-box.Disciplinar {
+    border-color: #3CB371; /* MediumSeaGreen */
+}
+body.dark-mode .course-box.Electiva {
+    border-color: #FF7F50; /* Coral */
+}
+
+
 .course-box.approved {
-    background-color: #EE82EE; /* Violet - Morado pastel más oscuro para aprobado */
+    background-color: var(--course-box-approved-bg);
     text-decoration: line-through;
     cursor: default;
+    color: white;
 }
 
 .course-box.blocked {
-    background-color: #E6E6FA; /* LavenderBlush - Morado grisáceo muy claro para bloqueado */
-    color: #666; /* Un color de texto más suave para el bloqueado */
+    background-color: var(--course-box-blocked-bg);
+    color: var(--course-box-blocked-text);
     cursor: not-allowed;
-    opacity: 0.9; /* Ligeramente más opaco para que se vea el candado y texto */
+    opacity: 0.8;
 }
 
-/* Recomendaciones */
+/* Recommendations */
 .recommendations-container {
-    background-color: #fff;
-    padding: 20px;
+    background-color: var(--recommendations-bg-color);
+    padding: 25px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-top: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    margin-top: 40px;
     text-align: center;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .recommendations-container h2 {
-    color: #8A2BE2; /* BlueViolet - Morado vibrante para el título */
-    margin-bottom: 15px;
+    color: var(--recommendations-title-color);
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    transition: color 0.5s ease;
 }
 
 #recommendedCourses {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 #recommendedCourses .course-box {
-    background-color: #BA55D3; /* MediumOrchid - Un morado pastel distinto para recomendaciones */
+    background-color: var(--recommended-course-bg);
     color: white;
     cursor: default;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     text-decoration: none;
-    border-color: #BA55D3; /* Mismo color de fondo para el borde */
+    border-color: var(--recommended-course-bg); /* Same as background for consistency */
+    transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
 #refreshRecommendations {
-    padding: 10px 20px;
-    background-color: #EE82EE; /* Violet - Morado pastel, consistente con aprobado */
+    padding: 12px 25px;
+    background-color: var(--refresh-button-bg);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 #refreshRecommendations:hover {
-    background-color: #BA55D3; /* MediumOrchid - Morado pastel más oscuro al pasar el ratón */
+    background-color: var(--refresh-button-hover-bg);
+    transform: translateY(-1px);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .semesters-container {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .semester {
-        width: 45%;
-        min-width: 150px;
-    }
+#refreshRecommendations:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-@media (max-width: 480px) {
-    .semester {
-        width: 90%;
-        min-width: unset;
-    }
-}
-
-/* --- Estilos para el Modal --- */
+/* Modal Styles */
 .modal {
-    display: none; /* Oculto por defecto */
-    position: fixed; /* Permanece en su lugar */
-    z-index: 1; /* Se sitúa por encima de todo */
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%; /* Ancho completo */
-    height: 100%; /* Alto completo */
-    overflow: auto; /* Habilitar scroll si es necesario */
-    background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente negro */
-    display: flex; /* Usar flexbox para centrar el contenido */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: var(--modal-bg-color); /* Black w/ opacity */
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(5px); /* Blurred background */
+    -webkit-backdrop-filter: blur(5px); /* For Safari */
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: auto; /* Centrar vertical y horizontalmente */
-    padding: 25px;
-    border: 1px solid #888;
-    width: 80%; /* Ancho del contenido */
-    max-width: 500px; /* Ancho máximo */
+    background-color: var(--modal-content-bg);
+    margin: auto;
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 500px;
     position: relative;
     text-align: left;
-    color: #333;
+    color: var(--modal-text-color);
+    animation: fade-in 0.3s ease-out;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.close-button {
+    color: var(--modal-text-color);
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #f00; /* Red on hover */
+    text-decoration: none;
 }
 
 .modal-content h2 {
-    color: #8A2BE2; /* Mismo morado vibrante que los títulos */
+    color: var(--average-grade-text-color); /* Consistent with average grade color */
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.8em;
 }
 
 .modal-content p {
-    margin-bottom: 8px;
-    line-height: 1.5;
+    margin-bottom: 10px;
+    font-size: 1.05em;
 }
 
 .modal-content strong {
-    color: #555;
-}
-
-.close-button {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    cursor: pointer;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+    color: var(--text-color); /* Darker text for labels */
 }
 
 .modal-button {
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
-    margin-top: 15px;
-    margin-right: 10px;
-    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .modal-button.approve {
-    background-color: #EE82EE; /* Violet - Morado pastel */
+    background-color: var(--modal-button-approve-bg);
     color: white;
+    margin-right: 10px;
 }
 
 .modal-button.approve:hover {
-    background-color: #BA55D3; /* MediumOrchid - Morado más oscuro */
+    background-color: var(--modal-button-approve-hover-bg);
+    transform: translateY(-1px);
+}
+.modal-button.approve:active {
+    transform: translateY(0);
 }
 
 .modal-button.close {
-    background-color: #cccccc;
-    color: #333;
+    background-color: var(--modal-button-close-bg);
+    color: white;
 }
 
 .modal-button.close:hover {
-    background-color: #bbbbbb;
+    background-color: var(--modal-button-close-hover-bg);
+    transform: translateY(-1px);
+}
+.modal-button.close:active {
+    transform: translateY(0);
+}
+
+/* Tooltips */
+.tooltip {
+    position: absolute;
+    background-color: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    white-space: nowrap; /* Keep text on one line */
+    z-index: 1001; /* Above modal */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    pointer-events: none; /* Allows clicks on elements beneath it */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    animation: tooltip-fade-in 0.2s forwards;
+}
+
+@keyframes tooltip-fade-in {
+    from { opacity: 0; transform: translate(-50%, 10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .semesters-container {
+        padding: 10px;
+        gap: 10px;
+    }
+    .semester {
+        width: 170px;
+        padding: 12px;
+    }
+    .course-box {
+        padding: 10px;
+        min-height: 45px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    .header h1 {
+        font-size: 1.8em;
+    }
+    .progress-container {
+        width: 95%;
+    }
+    .semesters-container {
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        justify-content: center;
+        gap: 15px;
+    }
+    .semester {
+        width: 45%; /* Two columns */
+        min-width: 150px;
+        font-size: 0.9em;
+    }
+    .course-box {
+        font-size: 0.85em;
+        min-height: 40px;
+    }
+    .recommendations-container {
+        padding: 20px;
+    }
+    .recommendations-container h2 {
+        font-size: 1.5em;
+    }
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    .header h1 {
+        font-size: 1.5em;
+        line-height: 1.2;
+    }
+    .theme-toggle {
+        top: 5px;
+        right: 10px;
+        width: 50px;
+        height: 25px;
+    }
+    .theme-toggle-icon {
+        font-size: 1em;
+    }
+    .progress-container, .average-grade-container {
+        font-size: 0.9em;
+    }
+    .semester {
+        width: 90%; /* One column */
+        min-width: unset;
+    }
+    .course-box {
+        padding: 8px;
+        min-height: 35px;
+        font-size: 0.8em;
+    }
+    #refreshRecommendations {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    .modal-content h2 {
+        font-size: 1.4em;
+    }
+    .modal-content p {
+        font-size: 0.95em;
+    }
+    .modal-button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+    .tooltip {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
 }
