@@ -1,25 +1,25 @@
 /* style.css */
 
-/* Define CSS Variables for Light Mode */
+/* Define Variables CSS para Modo Claro */
 body.light-mode {
-    --bg-color: #FFF0F5; /* LavenderBlush - a very light, soft pink */
+    --bg-color: #FFF0F5; /* LavenderBlush - un rosa muy claro y suave */
     --text-color: #333;
     --header-color: #333;
-    --progress-bg-color: #E0E0E0; /* Progress bar background */
-    --progress-empty-color: #FFC0CB; /* Initial pastel pink for progress */
-    --progress-fill-color: #EE82EE; /* Violet - pastel purple for progress */
-    --average-grade-bg: #F8F8FF; /* GhostWhite - very light background */
-    --average-grade-text-color: #8A2BE2; /* BlueViolet - vibrant purple */
+    --progress-bg-color: #E0E0E0; /* Fondo de la barra de progreso */
+    --progress-empty-color: #FFC0CB; /* Rosado pastel inicial para el progreso */
+    --progress-fill-color: #EE82EE; /* Violet - morado pastel para el progreso */
+    --average-grade-bg: #F8F8FF; /* GhostWhite - fondo muy claro */
+    --average-grade-text-color: #8A2BE2; /* BlueViolet - morado vibrante */
     --semesters-bg-color: #fff;
-    --semester-column-bg: #F8F8FF; /* GhostWhite - Semester column background */
+    --semester-column-bg: #F8F8FF; /* GhostWhite - Fondo de la columna del semestre */
     --semester-text-color: #6c757d;
-    --course-box-default-bg: #FFC0CB; /* Pink - Pastel pink for unapproved/available courses */
-    --course-box-approved-bg: #EE82EE; /* Violet - Darker pastel purple for approved */
-    --course-box-blocked-bg: #E6E6FA; /* Lavender - Very light grayish purple for blocked */
+    --course-box-default-bg: #FFC0CB; /* Pink - Rosado pastel para ramos no aprobados/disponibles */
+    --course-box-approved-bg: #EE82EE; /* Violet - Morado pastel más oscuro para aprobado */
+    --course-box-blocked-bg: #E6E6FA; /* Lavender - Morado grisáceo muy claro para bloqueado */
     --course-box-blocked-text: #666;
     --recommendations-bg-color: #fff;
-    --recommendations-title-color: #8A2BE2; /* BlueViolet - vibrant purple for title */
-    --recommended-course-bg: #BA55D3; /* MediumOrchid - a distinct pastel purple for recommendations */
+    --recommendations-title-color: #8A2BE2; /* BlueViolet - morado vibrante para el título */
+    --recommended-course-bg: #BA55D3; /* MediumOrchid - un morado pastel distinto para recomendaciones */
     --refresh-button-bg: #EE82EE;
     --refresh-button-hover-bg: #BA55D3;
     --modal-bg-color: rgba(0, 0, 0, 0.5);
@@ -32,14 +32,14 @@ body.light-mode {
     --tooltip-bg: #333;
     --tooltip-text: #fff;
     --toggle-button-bg: #E0E0E0;
-    --toggle-icon-color: #FFD700; /* Gold for sun */
-    --toggle-icon-active-color: #ADD8E6; /* Light Blue for moon */
+    --toggle-icon-color-light: #FFD700; /* Gold para sol */
+    --toggle-icon-color-dark: #ADD8E6; /* Light Blue para luna */
 }
 
-/* Define CSS Variables for Dark Mode */
+/* Define Variables CSS para Modo Oscuro */
 body.dark-mode {
-    --bg-color: #2c2c2c; /* Dark gray for background */
-    --text-color: #e0e0e0; /* Light gray for text */
+    --bg-color: #2c2c2c; /* Gris oscuro para el fondo */
+    --text-color: #e0e0e0; /* Gris claro para el texto */
     --header-color: #f0f0f0;
     --progress-bg-color: #555;
     --progress-empty-color: #777;
@@ -68,8 +68,8 @@ body.dark-mode {
     --tooltip-bg: #eee;
     --tooltip-text: #333;
     --toggle-button-bg: #666;
-    --toggle-icon-color: #eee; /* Light color for moon */
-    --toggle-icon-active-color: #FFD700; /* Gold for sun */
+    --toggle-icon-color-light: #eee; /* Light color para luna */
+    --toggle-icon-color-dark: #FFD700; /* Gold para sol */
 }
 
 
@@ -79,14 +79,14 @@ body {
     padding: 20px;
     background-color: var(--bg-color);
     color: var(--text-color);
-    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth transition for theme change */
+    transition: background-color 0.5s ease, color 0.5s ease; /* Transición suave para el cambio de tema */
     line-height: 1.6;
 }
 
 .header {
     text-align: center;
     margin-bottom: 30px;
-    position: relative; /* For positioning the theme toggle */
+    position: relative; /* Para posicionar el toggle de tema */
 }
 
 .header h1 {
@@ -96,7 +96,7 @@ body {
     font-size: 2.2em;
 }
 
-/* Theme Toggle Button */
+/* Botón de Modo Oscuro/Claro */
 .theme-toggle {
     position: absolute;
     top: 0;
@@ -121,25 +121,25 @@ body {
 }
 
 .theme-toggle-icon.light {
-    color: var(--toggle-icon-color);
+    color: var(--toggle-icon-color-light);
     opacity: 1;
 }
 
 .theme-toggle-icon.dark {
-    color: var(--toggle-icon-active-color);
-    opacity: 0; /* Hidden by default in light mode */
-    transform: translateX(-100%); /* Start off-screen */
+    color: var(--toggle-icon-color-dark);
+    opacity: 0; /* Oculto por defecto en modo claro */
+    transform: translateX(-100%); /* Inicia fuera de la pantalla */
 }
 
-/* Dark mode specific for toggle */
+/* Específicos para el modo oscuro para el toggle */
 body.dark-mode .theme-toggle-icon.light {
     opacity: 0;
-    transform: translateX(100%); /* Move sun off-screen */
+    transform: translateX(100%); /* Mueve el sol fuera de la pantalla */
 }
 
 body.dark-mode .theme-toggle-icon.dark {
     opacity: 1;
-    transform: translateX(0); /* Bring moon in */
+    transform: translateX(0); /* Trae la luna a la pantalla */
 }
 
 
@@ -152,7 +152,7 @@ body.dark-mode .theme-toggle-icon.dark {
     height: 30px;
     position: relative;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    overflow: hidden; /* Ensure progress bar doesn't overflow */
+    overflow: hidden; /* Asegura que la barra de progreso no se desborde */
 }
 
 .progress-bar {
@@ -162,8 +162,8 @@ body.dark-mode .theme-toggle-icon.dark {
     border-radius: 5px;
     text-align: center;
     line-height: 30px;
-    color: white; /* Text color on the bar */
-    transition: width 0.7s ease-in-out, background-color 0.7s ease; /* Smooth transition for width and color */
+    color: white; /* Color del texto en la barra */
+    transition: width 0.7s ease-in-out, background-color 0.7s ease; /* Transición suave para ancho y color */
 }
 
 .progress-text {
@@ -174,11 +174,11 @@ body.dark-mode .theme-toggle-icon.dark {
     left: 0;
     line-height: 30px;
     font-weight: bold;
-    color: var(--text-color); /* Text color outside the bar */
+    color: var(--text-color); /* Color del texto fuera de la barra */
     text-shadow: 0 0 2px rgba(0,0,0,0.1);
 }
 
-/* Styles for average grade */
+/* Estilos para el promedio de ramos */
 .average-grade-container {
     margin-top: 10px;
     font-size: 1.1em;
@@ -211,12 +211,12 @@ body.dark-mode .theme-toggle-icon.dark {
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     min-width: fit-content;
     transition: background-color 0.5s ease;
-    flex-wrap: nowrap; /* Prevent wrapping for horizontal scroll */
+    flex-wrap: nowrap; /* Evita que se envuelva para el scroll horizontal */
 }
 
 .semester {
     flex-shrink: 0;
-    width: 200px; /* Slightly wider for better content display */
+    width: 200px; /* Un poco más ancho para mejor visualización del contenido */
     background-color: var(--semester-column-bg);
     padding: 15px;
     border-radius: 8px;
@@ -256,7 +256,7 @@ body.dark-mode .theme-toggle-icon.dark {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 50px; /* Ensure minimum height */
+    min-height: 50px; /* Asegura una altura mínima */
     line-height: 1.3;
     font-size: 0.95em;
     font-weight: 500;
@@ -264,10 +264,10 @@ body.dark-mode .theme-toggle-icon.dark {
 
 .course-box:hover:not(.approved):not(.blocked) {
     opacity: 0.9;
-    transform: translateY(-2px); /* Slight lift on hover */
+    transform: translateY(-2px); /* Ligero levantamiento al pasar el ratón */
 }
 
-/* Click animation */
+/* Animación al hacer clic */
 .course-box.clicked {
     animation: click-animation 0.3s forwards;
 }
@@ -279,18 +279,18 @@ body.dark-mode .theme-toggle-icon.dark {
 }
 
 
-/* Border colors by area (pastels) */
+/* Colores de borde por área (pasteles) */
 .course-box.Básica {
-    border-color: #ADD8E6; /* LightBlue - Light blue pastel */
+    border-color: #ADD8E6; /* LightBlue - Azul claro pastel */
 }
 .course-box.Disciplinar {
-    border-color: #98FB98; /* PaleGreen - Pale green pastel */
+    border-color: #98FB98; /* PaleGreen - Verde pálido pastel */
 }
 .course-box.Electiva {
-    border-color: #FFDAB9; /* PeachPuff - Peach pastel */
+    border-color: #FFDAB9; /* PeachPuff - Durazno pastel */
 }
 
-/* Dark mode border colors by area */
+/* Colores de borde de área en Modo Oscuro */
 body.dark-mode .course-box.Básica {
     border-color: #6A5ACD; /* SlateBlue */
 }
@@ -316,7 +316,7 @@ body.dark-mode .course-box.Electiva {
     opacity: 0.8;
 }
 
-/* Recommendations */
+/* Recomendaciones */
 .recommendations-container {
     background-color: var(--recommendations-bg-color);
     padding: 25px;
@@ -348,7 +348,7 @@ body.dark-mode .course-box.Electiva {
     cursor: default;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     text-decoration: none;
-    border-color: var(--recommended-course-bg); /* Same as background for consistency */
+    border-color: var(--recommended-course-bg); /* Mismo color que el fondo para consistencia */
     transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
@@ -374,21 +374,21 @@ body.dark-mode .course-box.Electiva {
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-/* Modal Styles */
+/* Estilos del Modal */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Permanece en el mismo lugar */
+    z-index: 1000; /* Se sitúa encima */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: var(--modal-bg-color); /* Black w/ opacity */
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Habilita scroll si es necesario */
+    background-color: var(--modal-bg-color); /* Negro con opacidad */
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px); /* Blurred background */
-    -webkit-backdrop-filter: blur(5px); /* For Safari */
+    backdrop-filter: blur(5px); /* Fondo difuminado */
+    -webkit-backdrop-filter: blur(5px); /* Para Safari */
 }
 
 .modal-content {
@@ -424,12 +424,12 @@ body.dark-mode .course-box.Electiva {
 
 .close-button:hover,
 .close-button:focus {
-    color: #f00; /* Red on hover */
+    color: #f00; /* Rojo al pasar el ratón */
     text-decoration: none;
 }
 
 .modal-content h2 {
-    color: var(--average-grade-text-color); /* Consistent with average grade color */
+    color: var(--average-grade-text-color); /* Consistente con el color del promedio */
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.8em;
@@ -441,7 +441,7 @@ body.dark-mode .course-box.Electiva {
 }
 
 .modal-content strong {
-    color: var(--text-color); /* Darker text for labels */
+    color: var(--text-color); /* Texto más oscuro para las etiquetas */
 }
 
 .modal-button {
@@ -490,21 +490,16 @@ body.dark-mode .course-box.Electiva {
     padding: 8px 12px;
     border-radius: 5px;
     font-size: 0.9em;
-    white-space: nowrap; /* Keep text on one line */
-    z-index: 1001; /* Above modal */
+    white-space: nowrap; /* Mantiene el texto en una sola línea */
+    z-index: 1001; /* Encima del modal */
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    pointer-events: none; /* Allows clicks on elements beneath it */
+    pointer-events: none; /* Permite clics en los elementos debajo */
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
-    animation: tooltip-fade-in 0.2s forwards;
+    /* La animación de entrada se maneja en JS para controlar la aparición */
 }
 
-@keyframes tooltip-fade-in {
-    from { opacity: 0; transform: translate(-50%, 10px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-/* Responsive adjustments */
+/* Media Queries para Diseño Responsive */
 @media (max-width: 1024px) {
     .semesters-container {
         padding: 10px;
@@ -532,12 +527,12 @@ body.dark-mode .course-box.Electiva {
         width: 95%;
     }
     .semesters-container {
-        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        flex-wrap: wrap; /* Permite que se envuelva en pantallas más pequeñas */
         justify-content: center;
         gap: 15px;
     }
     .semester {
-        width: 45%; /* Two columns */
+        width: 45%; /* Dos columnas */
         min-width: 150px;
         font-size: 0.9em;
     }
@@ -578,7 +573,7 @@ body.dark-mode .course-box.Electiva {
         font-size: 0.9em;
     }
     .semester {
-        width: 90%; /* One column */
+        width: 90%; /* Una columna */
         min-width: unset;
     }
     .course-box {
