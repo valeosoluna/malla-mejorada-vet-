@@ -1,10 +1,10 @@
 // script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    const LOCAL_STORAGE_KEY = 'mallaProgress'; // Key to save to localStorage
-    const THEME_STORAGE_KEY = 'mallaTheme'; // Key for theme preference
+    const LOCAL_STORAGE_KEY = 'mallaProgress'; // Clave para guardar en localStorage
+    const THEME_STORAGE_KEY = 'mallaTheme'; // Clave para la preferencia de tema
 
-    let allCourses; // This variable will contain the data, either loaded or initial
+    let allCourses; // Esta variable contendrá la data, ya sea cargada o la inicial
 
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const averageGradeText = document.getElementById('averageGradeText');
     const themeToggle = document.querySelector('.theme-toggle');
 
-    // Modal elements
+    // Elementos del Modal
     const courseModal = document.getElementById('courseModal');
     const closeModalButtons = document.querySelectorAll('.modal-button.close, .close-button');
     const modalCourseName = document.getElementById('modalCourseName');
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCoursePrerequisites = document.getElementById('modalCoursePrerequisites');
     const markAsApprovedBtn = document.getElementById('markAsApprovedBtn');
 
-    // Object to store course divs for each semester
+    // Objeto para almacenar los divs de cursos de cada semestre
     const semesterCoursesContainers = {};
     for (let i = 1; i <= 10; i++) {
         const semesterDiv = document.createElement('div');
@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const coursesDiv = document.createElement('div');
         coursesDiv.classList.add('courses-container');
         semesterDiv.appendChild(coursesDiv);
-        semesterCoursesContainers[i] = coursesDiv; // Map semester to its course container
+        semesterCoursesContainers[i] = coursesDiv; // Mapear semestre a su contenedor de cursos
     }
 
-    // --- Save and Load Functions ---
+    // --- Funciones de Guardado y Carga ---
     function saveProgress() {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allCourses));
     }
@@ -48,20 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (savedProgress) {
             allCourses = JSON.parse(savedProgress);
         } else {
-            // If no saved progress, use initial data from data.js
-            allCourses = coursesData.map(course => ({ ...course })); // Deep copy to avoid modifying original
+            // Si no hay progreso guardado, usa la data inicial de data.js
+            allCourses = coursesData.map(course => ({ ...course })); // Copia profunda para no modificar el original
         }
     }
-    // --- End Save and Load Functions ---
+    // --- Fin Funciones de Guardado y Carga ---
 
-    // --- Dark/Light Mode Functions ---
+    // --- Funciones de Modo Oscuro/Claro ---
     function loadTheme() {
         const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
         if (savedTheme) {
             document.body.classList.add(savedTheme);
             themeToggle.setAttribute('aria-checked', savedTheme === 'dark-mode');
         } else {
-            // Default to light mode if no preference
+            // Por defecto, usa el modo claro si no hay preferencia guardada
             document.body.classList.add('light-mode');
             themeToggle.setAttribute('aria-checked', false);
         }
@@ -82,11 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     themeToggle.addEventListener('click', toggleTheme);
-    // --- End Dark/Light Mode Functions ---
+    // --- Fin Funciones de Modo Oscuro/Claro ---
 
 
     function isCourseBlocked(course) {
-        // A course is blocked if it has prerequisites and at least one has not been approved.
+        // Un curso está bloqueado si tiene prerrequisitos y al menos uno no ha sido aprobado.
         if (!course.prerequisites || course.prerequisites.length === 0) {
             return false;
         }
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderMalla() {
-        // Clear all semester containers before re-rendering
+        // Limpiar todos los contenedores de ramos antes de volver a renderizar
         for (const sem in semesterCoursesContainers) {
             semesterCoursesContainers[sem].innerHTML = '';
         }
@@ -106,71 +106,72 @@ document.addEventListener('DOMContentLoaded', () => {
             const courseBox = document.createElement('div');
             courseBox.classList.add('course-box');
             courseBox.setAttribute('data-id', course.id);
-            courseBox.setAttribute('data-tooltip', course.description || 'No hay descripción disponible.'); // Add tooltip
+            // Añadir la descripción como data-tooltip para todos los cursos
+            courseBox.setAttribute('data-tooltip', course.description || 'No hay descripción disponible.');
 
-            // Show course name and grade if approved
+            // Mostrar nombre del ramo y nota si está aprobado
             if (course.approved && course.grade !== null) {
                 courseBox.textContent = `${course.name} (${course.grade.toFixed(1)})`;
             } else {
                 courseBox.textContent = course.name;
             }
 
-            // Add class for border color based on area
+            // Añadir clase para el borde de color según el área
             courseBox.classList.add(course.area);
 
             if (course.approved) {
                 courseBox.classList.add('approved');
             } else if (isCourseBlocked(course)) {
                 courseBox.classList.add('blocked');
-                courseBox.textContent += ' 🔒'; // Add padlock emoji
+                courseBox.textContent += ' 🔒'; // Añadir emoji de candado
             }
-            // If not approved or blocked, it keeps its default color (pastel pink)
+            // Si no está aprobado ni bloqueado, se queda con el color por defecto (rosado pastel)
 
             courseBox.addEventListener('click', () => {
-                // Add click animation class
+                // Agregar clase para la animación al hacer clic
                 courseBox.classList.add('clicked');
                 setTimeout(() => {
                     courseBox.classList.remove('clicked');
-                }, 300); // Remove class after animation duration
+                }, 300); // Eliminar clase después de la duración de la animación
 
                 const clickedCourse = allCourses.find(c => c.id === course.id);
 
                 if (clickedCourse.approved) {
-                    // If already approved, unapprove it (returns to pastel pink) and remove grade
+                    // Si ya está aprobado, desaprobarlo (vuelve a rosado pastel) y elimina la nota
                     clickedCourse.approved = false;
                     clickedCourse.grade = null;
-                    renderMalla(); // Re-render to update states
+                    renderMalla(); // Re-renderizar para actualizar estados
                     updateProgressBar();
-                    updateAverageGrade(); // Update average
+                    updateAverageGrade(); // Actualizar el promedio
                     updateRecommendedCourses();
-                    saveProgress(); // Save progress after each change!
+                    saveProgress(); // ¡Guardar el progreso después de cada cambio!
                 } else if (isCourseBlocked(clickedCourse)) {
-                    // If blocked (gray with padlock), do nothing on click.
-                    // Already has cursor: not-allowed in CSS.
+                    // Si está bloqueado (gris con candado), no se hace nada al hacer clic.
+                    // Ya tiene cursor: not-allowed en CSS.
                 } else {
-                    // If not approved or blocked, open the modal with information
+                    // Si no está aprobado ni bloqueado, abrir el modal con la información
                     openCourseModal(clickedCourse);
                 }
             });
 
-            // Add the course to its semester container
+            // Añadir el curso al contenedor de su semestre
             if (semesterCoursesContainers[course.semester]) {
                 semesterCoursesContainers[course.semester].appendChild(courseBox);
             }
         });
     }
 
-    // --- Modal Functions ---
-    let currentCourseInModal = null; // To know which course we are viewing in the modal
+    // --- Funciones del Modal ---
+    let currentCourseInModal = null; // Para saber qué ramo estamos viendo en el modal
 
     function openCourseModal(course) {
-        currentCourseInModal = course; // Save the current course
+        currentCourseInModal = course; // Guardar el ramo actual
         modalCourseName.textContent = course.name;
         modalCourseSemester.textContent = course.semester;
         modalCourseArea.textContent = course.area;
-        modalCourseDescription.textContent = course.description || "No hay descripción disponible."; // Show description or message
+        modalCourseDescription.textContent = course.description || "No hay descripción disponible."; // Mostrar descripción o mensaje
 
-        // Show prerequisite names
+        // Mostrar nombres de prerrequisitos
         if (course.prerequisites && course.prerequisites.length > 0) {
             const prereqNames = course.prerequisites.map(prereqId => {
                 const prereqCourse = allCourses.find(c => c.id === prereqId);
@@ -188,37 +189,37 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isNaN(grade) && grade >= 1.0 && grade <= 7.0) {
                 currentCourseInModal.approved = true;
                 currentCourseInModal.grade = grade;
-                closeCourseModal(); // Close the modal after approving
-                renderMalla(); // Re-render to update states
+                closeCourseModal(); // Cerrar el modal después de aprobar
+                renderMalla(); // Re-renderizar para actualizar estados
                 updateProgressBar();
                 updateAverageGrade();
                 updateRecommendedCourses();
                 saveProgress();
-            } else if (gradeInput !== null) { // If the user didn't cancel, but the input is invalid
+            } else if (gradeInput !== null) { // Si el usuario no canceló, pero la entrada es inválida
                 alert("Nota inválida. Por favor, ingresa un número entre 1.0 y 7.0.");
             }
         };
 
-        courseModal.style.display = 'flex'; // Show the modal
+        courseModal.style.display = 'flex'; // Mostrar el modal
     }
 
     function closeCourseModal() {
-        courseModal.style.display = 'none'; // Hide the modal
-        currentCourseInModal = null; // Clear the current course
+        courseModal.style.display = 'none'; // Ocultar el modal
+        currentCourseInModal = null; // Limpiar el ramo actual
     }
 
-    // Event listeners to close the modal
+    // Event listeners para cerrar el modal
     closeModalButtons.forEach(button => {
         button.addEventListener('click', closeCourseModal);
     });
 
-    // Close the modal if clicked outside the content
+    // Cerrar el modal si se hace clic fuera del contenido
     window.addEventListener('click', (event) => {
         if (event.target === courseModal) {
             closeCourseModal();
         }
     });
-    // --- End Modal Functions ---
+    // --- Fin Funciones del Modal ---
 
 
     function updateProgressBar() {
@@ -230,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressText.textContent = `${percentage.toFixed(0)}%`;
 
         if (percentage > 0) {
+            // Usa variables CSS para los colores de la barra de progreso
             progressBar.style.backgroundColor = 'var(--progress-fill-color)';
         } else {
             progressBar.style.backgroundColor = 'var(--progress-empty-color)';
@@ -254,12 +256,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateRecommendedCourses() {
         recommendedCoursesDiv.innerHTML = '';
-        // Filter unapproved and unblocked courses
+        // Filtrar cursos no aprobados y no bloqueados
         const availableCourses = allCourses.filter(course => !course.approved && !isCourseBlocked(course));
 
-        // Sort to prioritize:
-        // 1. Courses from earlier semesters.
-        // 2. Courses that are prerequisites for more other courses (impact).
+        // Ordenar para priorizar:
+        // 1. Ramos de semestres más tempranos.
+        // 2. Ramos que son prerrequisitos para más otros ramos (impacto).
         const sortedRecommendations = availableCourses.sort((a, b) => {
             if (a.semester !== b.semester) {
                 return a.semester - b.semester;
@@ -278,10 +280,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const impactA = getImpact(a.id);
             const impactB = getImpact(b.id);
 
-            return impactB - impactA; // Higher impact first
+            return impactB - impactA; // Mayor impacto primero
         });
 
-        const recommendationsToShow = sortedRecommendations.slice(0, 6); // Max 6
+        const recommendationsToShow = sortedRecommendations.slice(0, 6); // Máximo 6
 
         if (recommendationsToShow.length === 0) {
             recommendedCoursesDiv.textContent = 'No hay ramos disponibles para recomendar en este momento.';
@@ -290,9 +292,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const courseBox = document.createElement('div');
                 courseBox.classList.add('course-box');
                 courseBox.textContent = course.name;
-                // Don't apply 'approved' or 'blocked' states to recommendations
-                // But do apply area color for consistency
+                // No aplicar estados 'approved' o 'blocked' a las recomendaciones
+                // Pero sí el color de área para consistencia
                 courseBox.classList.add(course.area);
+                // Añadir tooltip a las recomendaciones
+                courseBox.setAttribute('data-tooltip', course.description || 'No hay descripción disponible.');
                 recommendedCoursesDiv.appendChild(courseBox);
             });
         }
@@ -300,43 +304,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     refreshRecommendationsBtn.addEventListener('click', updateRecommendedCourses);
 
-    // --- Tooltip Logic ---
+
+    // --- Lógica de Tooltips ---
     let tooltipTimeout;
+    const tooltipElement = document.createElement('div');
+    tooltipElement.classList.add('tooltip');
+    document.body.appendChild(tooltipElement);
+
     document.addEventListener('mouseover', (event) => {
         const target = event.target;
         const tooltipText = target.getAttribute('data-tooltip');
 
         if (tooltipText) {
-            // Clear any existing tooltip
+            // Limpiar cualquier tooltip existente o timeout pendiente
             clearTimeout(tooltipTimeout);
-            const existingTooltip = document.querySelector('.tooltip');
-            if (existingTooltip) {
-                existingTooltip.remove();
-            }
+            tooltipElement.style.opacity = '0'; // Ocultar antes de mostrar nuevo
 
             tooltipTimeout = setTimeout(() => {
-                const tooltip = document.createElement('div');
-                tooltip.classList.add('tooltip');
-                tooltip.textContent = tooltipText;
-                document.body.appendChild(tooltip);
+                tooltipElement.textContent = tooltipText;
 
-                // Position the tooltip
+                // Posicionar el tooltip
                 const rect = target.getBoundingClientRect();
-                tooltip.style.left = `${rect.left + rect.width / 2}px`;
-                tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`; // Above the element
+                let topPosition = rect.top - tooltipElement.offsetHeight - 10; // Arriba del elemento
+                let leftPosition = rect.left + rect.width / 2; // Centrado horizontalmente
 
-                // Adjust if too close to screen edges
-                if (rect.top - tooltip.offsetHeight - 10 < 0) { // If it goes off top
-                    tooltip.style.top = `${rect.bottom + 10}px`; // Place below
+                // Ajustar si se sale de los bordes superiores
+                if (topPosition < 0) {
+                    topPosition = rect.bottom + 10; // Abajo del elemento
                 }
-                if (rect.left + rect.width / 2 + tooltip.offsetWidth / 2 > window.innerWidth) { // If it goes off right
-                    tooltip.style.left = `${window.innerWidth - tooltip.offsetWidth - 5}px`;
+
+                tooltipElement.style.left = `${leftPosition}px`;
+                tooltipElement.style.top = `${topPosition}px`;
+                tooltipElement.style.transform = 'translateX(-50%)'; // Centrar horizontalmente
+
+                // Ajustar si se sale de los bordes laterales
+                const tooltipRect = tooltipElement.getBoundingClientRect();
+                if (tooltipRect.left < 5) {
+                    tooltipElement.style.left = `calc(5px + ${tooltipRect.width / 2}px)`;
                 }
-                if (rect.left + rect.width / 2 - tooltip.offsetWidth / 2 < 0) { // If it goes off left
-                    tooltip.style.left = `5px`;
+                if (tooltipRect.right > window.innerWidth - 5) {
+                    tooltipElement.style.left = `calc(${window.innerWidth - 5}px - ${tooltipRect.width / 2}px)`;
                 }
-                tooltip.style.transform = 'translateX(-50%)'; // Center horizontally
-            }, 500); // Delay before showing tooltip
+
+                tooltipElement.style.opacity = '1'; // Mostrar tooltip
+            }, 500); // Retraso antes de mostrar el tooltip
         }
     });
 
@@ -344,18 +355,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = event.target;
         if (target.hasAttribute('data-tooltip')) {
             clearTimeout(tooltipTimeout);
-            const existingTooltip = document.querySelector('.tooltip');
-            if (existingTooltip) {
-                existingTooltip.remove();
-            }
+            tooltipElement.style.opacity = '0'; // Ocultar tooltip inmediatamente
         }
     });
-    // --- End Tooltip Logic ---
+    // --- Fin Lógica de Tooltips ---
 
 
-    // --- Initial Calls ---
-    loadTheme(); // Load theme preference first
-    loadProgress(); // Load progress at the start
+    // --- Llamadas iniciales ---
+    loadTheme(); // Cargar la preferencia de tema primero
+    loadProgress(); // Cargar el progreso al inicio
     renderMalla();
     updateProgressBar();
     updateAverageGrade();
